@@ -165,7 +165,10 @@ public abstract class UpdatedDataFieldsProcessFunctionBase<I, O> extends Process
     public static ConvertAction canConvert(
             DataType oldType, DataType newType, TypeMapping typeMapping) {
         if (oldType.equalsIgnoreNullable(newType)) {
-            return ConvertAction.CONVERT;
+            // conversion from NULL -> NOT NULL is not supported
+            return oldType.isNullable() && !newType.isNullable()
+                    ? ConvertAction.EXCEPTION
+                    : ConvertAction.CONVERT;
         }
 
         int oldIdx = STRING_TYPES.indexOf(oldType.getTypeRoot());

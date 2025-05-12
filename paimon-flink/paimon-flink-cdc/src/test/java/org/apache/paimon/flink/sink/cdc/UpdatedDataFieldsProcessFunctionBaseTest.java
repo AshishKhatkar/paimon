@@ -104,4 +104,21 @@ public class UpdatedDataFieldsProcessFunctionBaseTest {
 
         assertEquals(UpdatedDataFieldsProcessFunctionBase.ConvertAction.IGNORE, convertAction);
     }
+
+    @Test
+    public void testNullableConversion() {
+        IntType nullableType = new IntType(true);
+        IntType nonNullableType = new IntType();
+
+        UpdatedDataFieldsProcessFunctionBase.ConvertAction convertAction = null;
+        convertAction =
+                UpdatedDataFieldsProcessFunctionBase.canConvert(
+                        nonNullableType, nullableType, TypeMapping.defaultMapping());
+        assertEquals(UpdatedDataFieldsProcessFunctionBase.ConvertAction.CONVERT, convertAction);
+
+        convertAction =
+                UpdatedDataFieldsProcessFunctionBase.canConvert(
+                        nullableType, nonNullableType, TypeMapping.defaultMapping());
+        assertEquals(UpdatedDataFieldsProcessFunctionBase.ConvertAction.EXCEPTION, convertAction);
+    }
 }
